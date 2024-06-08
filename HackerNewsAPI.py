@@ -1,5 +1,4 @@
 from collections import Counter
-from functools import cache
 from itertools import chain
 import requests
 
@@ -19,8 +18,6 @@ TYPE_STORY = "story"
 def get_top_stories_ids():
     return requests.get(TOP_STORIES_URL).json()
 
-
-@cache
 def get_item(id):
     string_id = str(id)
     return requests.get(f"{ITEM_URL + string_id}.json").json()
@@ -30,15 +27,14 @@ def get_first_n_items_by_id(ids, n):
     first_n_ids = get_first_n_from_sequence(ids, n)
     return [get_item(x) for x in first_n_ids]
 
-
 def get_top_n_stories(n):
     top_stories_ids = get_top_stories_ids()
     stories = []
     while len(stories) < n and len(top_stories_ids) > 0:
-      id = top_stories_ids.pop(0)
-      item = get_item(id)
-      if TYPE in item and item[TYPE] == TYPE_STORY:
-        stories.append(item)
+        id = top_stories_ids.pop(0)
+        item = get_item(id)
+        if TYPE in item and item[TYPE] == TYPE_STORY:
+            stories.append(item)
     return stories
 
 
